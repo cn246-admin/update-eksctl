@@ -101,6 +101,6 @@ fi
 
 # VERSION CHECK
 code_grn "[INFO] Done!"
-code_grn "Installed Version: $(eksctl --version)"
+code_grn "Installed Version: $(eksctl version)"
 
 # vim: ft=sh ts=2 sts=2 sw=2 sr et
