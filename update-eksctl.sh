@@ -5,9 +5,9 @@
 # https://eksctl.io/installation/
 
 # Colored output
-code_grn() { tput setaf 2; printf '%s\n' "${1}"; tput sgr0; }
-code_red() { tput setaf 1; printf '%s\n' "${1}"; tput sgr0; }
-code_yel() { tput setaf 3; printf '%s\n' "${1}"; tput sgr0; }
+code_err() { tput setaf 1; printf '%s\n' "$*" >&2; tput sgr0; }
+code_grn() { tput setaf 2; printf '%s\n' "$*"; tput sgr0; }
+code_yel() { tput setaf 3; printf '%s\n' "$*"; tput sgr0; }
 
 # Define funciton to delete temporary install files
 clean_up() {
@@ -31,7 +31,7 @@ case "$archi" in
   Linux\ *64)
     platform="linux_amd64" ;;
   *)
-    code_red "[ERROR] Unsupported OS. Exiting"; exit 1 ;;
+    code_err "[ERROR] Unsupported OS. Exiting"; exit 1 ;;
 esac
 
 # Variables
@@ -55,8 +55,8 @@ eksctl_sum_file="eksctl_checksums.txt"
 case :$PATH: in
   *:"${bin_dir}":*)  ;;  # do nothing
   *)
-    code_red "[ERROR] ${bin_dir} was not found in \$PATH!"
-    code_red "Add ${bin_dir} to PATH or select another directory to install to"
+    code_err "[ERROR] ${bin_dir} was not found in \$PATH!"
+    code_err "Add ${bin_dir} to PATH or select another directory to install to"
     exit 1 ;;
 esac
 
@@ -81,7 +81,7 @@ curl -sL -o "${tmp_dir}/${eksctl_sum_file}" "${eksctl_url}/${eksctl_sum_file}"
 # Verify shasum
 printf '%s\n' "[INFO] Verifying ${eksctl_tar_file}"
 if ! shasum -qc --ignore-missing "${eksctl_sum_file}"; then
-  code_red "[ERROR] Problem with checksum!"
+  code_err "[ERROR] Problem with checksum!"
   exit 1
 fi
 
